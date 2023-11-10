@@ -1,13 +1,13 @@
 
 //----------Variávis Globais
-const state = {
+var state = {
     view:{
         //Variáveis que alteram o que se vê na tela
         squares: document.querySelectorAll(".square"),
         enemy: document.querySelector(".enemy"),
         timeLeft: document.querySelector("#time-left"),
         score: document.querySelector("#score"),
-
+        lives: document.querySelector("#lives"),
     },
 
     values:{
@@ -16,23 +16,42 @@ const state = {
         hitposition: 0,
         result: 0,
         currentTime:60,
-
+        vidas:3,
+        fase:0,
+        
     },
     actions:{
         //Variáveis que geram uma ação na tela
         timerID: null ,
-        countDownTimerId: setInterval(countDown,1000),
+        //countDownTimerId: setInterval(countDown,1000),
 
     }
-
 }
+var placar=[0,0,0];
+
 //----------Funções secundárias
+
+//Game Over
+
+function gameover(){
+    playsound("gameover");
+    placar[state.values.fase] = state.values.result;
+    alert(`Fim de jogo o seu placar foi
+    LEVEL 1: ${placar[0]}
+    LEVEL 2: ${placar[1]}
+    LEVEL 3: ${placar[2]}
+    TOTAL : ${placar[0]+placar[1]+placar[2]}`);
+    
+    
+    }
 
 //Audio
 function playsound(audioName){
 
     let audio = new Audio(`./src/audios/${audioName}.m4a`);
-    audio.volume = 0.3;
+    
+    if (audioName==="hit"){
+    audio.volume = 0.2;}
     audio.play();
 
 }
@@ -45,7 +64,9 @@ function countDown(){
     if (state.values.currentTime <= 0){
         clearInterval(state.actions.countDownTimerId);
         clearInterval(state.actions.timerID);
-        alert("Game over! O seu resultado foi: " + state.values.result);
+        if (state.values.fase===2){
+            gameover();
+        }
     }
 
 }
@@ -71,26 +92,77 @@ function moveEnemy(){
 }
 
 //Função para verificar onde o user clicou
-function addListenerHitBox(){
-
+function addListenerHitBox() {
+    
     state.view.squares.forEach((square) => {
-        square.addEventListener("mousedown", () =>{
-            if (square.id=== state.values.hitposition){
-            state.values.result++;
-            state.view.score.textContent = state.values.result;
-            state.values.hitposition = null;
-            playsound("hit");
-            };
+        square.addEventListener("mousedown", () => {
+            if (state.values.hitposition !== null && square.id === state.values.hitposition) {
+                state.values.result++;
+                state.view.score.textContent = state.values.result;
+                state.values.hitposition = null;
+                placar[state.values.fase] = state.values.result;
+                playsound("hit");
+                if (state.values.result % 5 === 0) {
+                    state.values.vidas++;
+                    state.view.lives.textContent = `x${state.values.vidas}`;
+                    playsound("1up");
+                }
+            } 
+            else if (state.values.hitposition !== null) {
+                playsound("erro");
+                state.values.vidas--;
+                state.view.lives.textContent = `x${state.values.vidas}`;
+                if (state.values.vidas <= 0) {
+                    setTimeout(gameover, 600);
+                }
+            }
         });
-
     });
 }
 
-//----------Função Principal
-function initialize(){
-    
-    moveEnemy();
-    addListenerHitBox();
-}
 
-initialize();
+//----------Função Principal
+function main(){
+    function initialize(velocidade) {
+        state.values.currentTime = 60;
+        state.view.timeLeft.textContent = state.values.currentTime;
+        state.actions.countDownTimerId= setInterval(countDown,1000);
+        state.values.gameVelocity = velocidade;
+        state.values.hitposition = 0;
+        state.values.result = 0;
+        moveEnemy();
+        //setInterval(countDown,1000);
+        addListenerHitBox();
+    }
+    
+    //LEVEL 1
+    alert("FASE 1");
+    initialize(1000);
+    
+    //LEVEL 2
+    setTimeout(function () {
+        if (state.values.result >= 40) {
+            alert("FASE 2");
+            
+            state.values.fase++;
+            initialize(800);
+        }
+        else{
+            gameover();
+        }
+    }, 62500);
+    
+    //LEVEL 3
+    setTimeout(function () {
+        if (state.values.result >= 40) {
+            alert("FASE 3");
+            state.values.fase++;
+            initialize(750);
+        }
+        else{
+            gameover();
+        }
+
+    }, 123000);
+}
+main ();
