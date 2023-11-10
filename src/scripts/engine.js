@@ -40,9 +40,7 @@ function gameover(){
     LEVEL 1: ${placar[0]}
     LEVEL 2: ${placar[1]}
     LEVEL 3: ${placar[2]}
-    TOTAL : ${placar[0]+placar[1]+placar[2]}`);
-    
-    
+    TOTAL : ${placar[0]+placar[1]+placar[2]}`);      
     }
 
 //Audio
@@ -119,7 +117,6 @@ function addListenerHitBox() {
         });
     });
 }
-
 
 //----------Função Principal
 function main(){
