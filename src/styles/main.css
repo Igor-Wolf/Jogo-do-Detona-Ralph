@@ -1,3 +1,8 @@
+body{
+
+    height: 100vh;
+}
+
 .container{
 
     display: flex;
@@ -6,6 +11,7 @@
     background-image: url("../images/wall.png");
     background-image: repeating-linear-gradient();
 
+    
 }
 
 .menu{
@@ -13,7 +19,7 @@
     display: flex;
     justify-content: space-evenly; /*espaçamento entre os elementos*/
     align-items: center;
-    height: 90px;
+    height: 100px;
     width: 100%;
     background-color: #000000;
     color: #ffffff;
@@ -58,5 +64,47 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px;
 
 }
+
+
+
+@media screen and (max-width: 1000px) {
+
+
+.container{
+
+    width: 100vw;
+    height: 100vh;
+    font-size: .7rem;
+    
+    
+}
+
+.menu-time{
+    padding: 10px;
+
+}
+
+.panel {
+    width: 100vw;
+    
+    
+}
+
+.panel-row{
+    width: 100vw;
+}
+
+.square{
+
+    width: 33.333333vw;
+    height: 33.333333vw;
+}
+
+
+
+}
+
+
